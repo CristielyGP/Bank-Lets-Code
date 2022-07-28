@@ -1,5 +1,7 @@
 package contas;
 
+import java.math.BigDecimal;
+
 import clientes.Cliente;
 import clientes.ClientePessoaJuridica;
 
@@ -8,55 +10,52 @@ public abstract class Conta {
     private int numero;
     private int agencia;
     private Cliente titular;
-    private double saldo;
+    private BigDecimal saldo;
 
     public Conta(int numero, int agencia, Cliente titular) {
         this.numero = numero;
         this.agencia = agencia;
         this.titular = titular;
     }
-
-    public boolean sacar(double valor) {
-
-        if (this.getTitular() instanceof ClientePessoaJuridica)
-            valor *= 1.005;
-
-        if (this.getSaldo() >= valor) {
-            this.saldo -= valor;
+    
+    public void sacar(double valor) {
+        if(this.operacaoSaque(valor)) {
             mostrarSaldo(Operacoes.sacar.toString());
-            return true;
         } else {
             System.out.println("Saldo indisponível");
+        }
+    }
+
+    private boolean operacaoSaque(double valor) {
+        if (this.getTitular() instanceof ClientePessoaJuridica) {
+            valor = valor*1.005;
+        }
+
+        if (this.getSaldo().compareTo(BigDecimal.valueOf(valor)) >= 0) {
+            this.setSaldo(this.getSaldo()
+                              .subtract(BigDecimal.valueOf(valor)));
+            return true;
+        } else {
             return false;
         }
     }
 
     public void depositar(double valor) {
-        if (this.getTitular() instanceof ClientePessoaJuridica)
-            valor -= valor*0.005;
-
-        this.saldo += valor;
+        this.setSaldo(this.getSaldo()
+                          .add(BigDecimal.valueOf(valor)));
         mostrarSaldo(Operacoes.depositar.toString());
-
     }
 
-    public boolean transferir(double valor, Conta destino) {
-        
-        if (this.getTitular() instanceof ClientePessoaJuridica)
-            valor -= valor*0.005;
-
-        if (this.sacar(valor)) {
-            destino.depositar(valor);
-            mostrarSaldo(Operacoes.transferir.toString());
-            return true;
+    public void transferir(double valor, Conta destino) {
+        if(destino != null) {
+            if (this.operacaoSaque(valor)) {
+                destino.depositar(valor);
+                mostrarSaldo(Operacoes.transferir.toString());
+            } else {
+                System.out.println("Saldo insuficiente");    
+            }
         } else {
-            if(destino == null)
-                System.out.println("Conta destino inexistente");
-            
-            if(this.saldo < valor)
-                System.out.println("Saldo insuficiente");
-                
-            return false;
+            System.out.println("Conta destino inexistente");
         }
     }
 
@@ -84,7 +83,11 @@ public abstract class Conta {
         return titular;
     }
 
-    public double getSaldo() {
-        return saldo;
+    public BigDecimal getSaldo() {
+        return this.saldo;
+    }
+
+    private void setSaldo(BigDecimal saldo) {
+        this.saldo = saldo;
     }
 }
