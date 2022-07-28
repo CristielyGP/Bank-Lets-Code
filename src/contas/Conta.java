@@ -16,6 +16,7 @@ public abstract class Conta {
         this.numero = numero;
         this.agencia = agencia;
         this.titular = titular;
+        this.saldo = BigDecimal.valueOf(0);
     }
     
     public void sacar(double valor) {
@@ -41,9 +42,17 @@ public abstract class Conta {
     }
 
     public void depositar(double valor) {
+        if(this.operacaoDeposito(BigDecimal.valueOf(valor))) {
+            mostrarSaldo(Operacoes.depositar.toString());
+        } else {
+            System.out.println("Um erro aconteceu durante a operação de depósito. Operação Abortada.");
+        }
+    }
+
+    protected boolean operacaoDeposito(BigDecimal valor) {
         this.setSaldo(this.getSaldo()
-                          .add(BigDecimal.valueOf(valor)));
-        mostrarSaldo(Operacoes.depositar.toString());
+                          .add(valor));
+        return true;
     }
 
     public void transferir(double valor, Conta destino) {
