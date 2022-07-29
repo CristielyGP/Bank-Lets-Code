@@ -7,6 +7,7 @@ import clientes.ClientePessoaJuridica;
 
 public abstract class Conta {
 
+    public static int numeroDeContas = 1;
     private int numero;
     private int agencia;
     private Cliente titular;
@@ -17,11 +18,13 @@ public abstract class Conta {
         this.agencia = agencia;
         this.titular = titular;
         this.saldo = BigDecimal.valueOf(0);
+        numeroDeContas++;
     }
     
     public void sacar(double valor) {
         if(this.operacaoSaque(valor)) {
-            mostrarSaldo(Operacoes.sacar.toString());
+            //mostrarSaldo(Operacoes.sacar.toString());
+            mostrarSaldo();
         } else {
             System.out.println("Saldo indisponível");
         }
@@ -43,7 +46,8 @@ public abstract class Conta {
 
     public void depositar(double valor) {
         if(this.operacaoDeposito(BigDecimal.valueOf(valor))) {
-            mostrarSaldo(Operacoes.depositar.toString());
+            //mostrarSaldo(Operacoes.depositar.toString());
+            mostrarSaldo();
         } else {
             System.out.println("Um erro aconteceu durante a operação de depósito. Operação Abortada.");
         }
@@ -59,7 +63,8 @@ public abstract class Conta {
         if(destino != null) {
             if (this.operacaoSaque(valor)) {
                 destino.depositar(valor);
-                mostrarSaldo(Operacoes.transferir.toString());
+                mostrarSaldo();
+                //mostrarSaldo(Operacoes.transferir.toString());
             } else {
                 System.out.println("Saldo insuficiente");    
             }
@@ -68,8 +73,8 @@ public abstract class Conta {
         }
     }
 
-    public void mostrarSaldo(String operacao) {
-        System.out.println("A operação de " + operacao + " foi realizada com sucesso! O saldo da conta " + this.getNumero() + " agora é " + this.getSaldo());
+    public void mostrarSaldo() {
+        System.out.println("O saldo da conta " + this.getNumero() + " atual é " + this.getSaldo());
     }
     
     public int getNumero() {
