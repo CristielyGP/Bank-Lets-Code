@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class App {
 
-    static boolean listou = false;
+    static boolean flagAcesso = false;
 
     public static void main(String[] args) throws Exception {
 
@@ -47,7 +47,7 @@ public class App {
 
             opcao = scanner.nextInt();
             scanner.nextLine();
-            listou = false;
+            flagAcesso = false;
 
             switch (opcao) {
                 case 1:
@@ -138,7 +138,7 @@ public class App {
                 case 2:
                     if (listaContas.isEmpty()) {
                         System.out.println("Nenhuma conta registrada!");
-                        listou = true;
+                        flagAcesso = true;
                         esperaProximaOperacao();
                         break;
                     }
@@ -148,13 +148,13 @@ public class App {
                         if (listaContas.get(i).getNumero() == numeroConta) {
                             contaAcessada = i;
                             System.out.println("Conta acessada " + listaContas.get(i).getTitular().getNome());
-                            listou = false;
+                            flagAcesso = false;
                             esperaProximaOperacao();  
                             break;
                         }
                         else if(i == listaContas.size()){
                             System.out.println("Conta não encontrada!");
-                            listou = true;
+                            flagAcesso = true;
                             esperaProximaOperacao();   
                         }
                     }
@@ -178,7 +178,7 @@ public class App {
                     }
             }
 
-            if (!listou) {
+            if (!flagAcesso) {
                 while (opcao != 5) {
                     System.out.println("-----------------------------------------------------------");
                     System.out.println("------------------Bem vindos a Let's Bank------------------");
@@ -235,7 +235,7 @@ public class App {
                             System.out.println("Obrigado por usar Let's Bank! Até a próxima!");
                             opcao = -1;
                     }
-                    listou = false;
+                    flagAcesso = false;
                 }
             }
         }
@@ -244,7 +244,7 @@ public class App {
 
     public static void listarContas(ArrayList<Conta> listaContas) {
 
-        listou = true;
+        flagAcesso = true;
 
         if (listaContas.isEmpty())
             System.out.println("Nenhuma conta encontrada!");
