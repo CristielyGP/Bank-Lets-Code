@@ -1,6 +1,7 @@
 import contas.*;
 import clientes.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -46,6 +47,7 @@ public class App {
 
             opcao = scanner.nextInt();
             scanner.nextLine();
+            listou = false;
 
             switch (opcao) {
                 case 1:
@@ -134,22 +136,39 @@ public class App {
                     break;
 
                 case 2:
+                    if (listaContas.isEmpty()) {
+                        System.out.println("Nenhuma conta registrada!");
+                        listou = true;
+                        esperaProximaOperacao();
+                        break;
+                    }
                     System.out.println("Digite o numero da conta");
                     int numeroConta = scanner.nextInt();
                     for (int i = 0; i < listaContas.size(); ++i) {
                         if (listaContas.get(i).getNumero() == numeroConta) {
                             contaAcessada = i;
                             System.out.println("Conta acessada " + listaContas.get(i).getTitular().getNome());
+                            listou = false;
+                            esperaProximaOperacao();  
                             break;
+                        }
+                        else if(i == listaContas.size()){
+                            System.out.println("Conta não encontrada!");
+                            listou = true;
+                            esperaProximaOperacao();   
                         }
                     }
                     if (contaAcessada == -1) {
                         System.out.println("Número da conta inválido, por favor reinicie a aplicação");
                         return;
-                    }
+                    }                  
+                                
+                    
+                    break;
 
                 case 3:
                     listarContas(listaContas);
+                    esperaProximaOperacao();
                     break;
 
                 case 4:
@@ -160,55 +179,64 @@ public class App {
             }
 
             if (!listou) {
-                System.out.println("-----------------------------------------------------------");
-                System.out.println("------------------Bem vindos a Let's Bank------------------");
-                System.out.println("-----------------------------------------------------------");
-                System.out.println("*****    Selecione uma operação que deseja realizar   *****");
-                System.out.println("-----------------------------------------------------------");
-                System.out.println("|   Opção 1 - Sacar         |");
-                System.out.println("|   Opção 2 - Depositar     |");
-                System.out.println("|   Opção 3 - Transferir    |");
-                System.out.println("|   Opção 4 - Ver Saldo     |");
-                System.out.println("|   Opção 5 - Voltar        |");
-                System.out.println("|   Opção 6 - Sair          |");
+                while (opcao != 5) {
+                    System.out.println("-----------------------------------------------------------");
+                    System.out.println("------------------Bem vindos a Let's Bank------------------");
+                    System.out.println("-----------------------------------------------------------");
+                    System.out.println("*****    Selecione uma operação que deseja realizar   *****");
+                    System.out.println("-----------------------------------------------------------");
+                    System.out.println("|   Opção 1 - Sacar         |");
+                    System.out.println("|   Opção 2 - Depositar     |");
+                    System.out.println("|   Opção 3 - Transferir    |");
+                    System.out.println("|   Opção 4 - Ver Saldo     |");
+                    System.out.println("|   Opção 5 - Voltar        |");
+                    System.out.println("|   Opção 6 - Sair          |");
 
-                opcao = scanner.nextInt();
-                scanner.nextLine();
+                    opcao = scanner.nextInt();
+                    scanner.nextLine();
 
-                switch (opcao) {
-                    case 1:
-                        System.out.println("Digite o valor a ser sacado");
-                        valor = scanner.nextInt();
-                        listaContas.get(contaAcessada).sacar(valor);
-                        break;
+                    switch (opcao) {
+                        case 1:
+                            System.out.println("Digite o valor a ser sacado");
+                            valor = scanner.nextInt();
+                            listaContas.get(contaAcessada).sacar(valor);
+                            esperaProximaOperacao();
+                            break;
 
-                    case 2:
-                        System.out.println("Digite o valor a ser depositado");
-                        valor = scanner.nextInt();
-                        listaContas.get(contaAcessada).depositar(valor);
-                        break;
+                        case 2:
+                            System.out.println("Digite o valor a ser depositado");
+                            valor = scanner.nextInt();
+                            listaContas.get(contaAcessada).depositar(valor);
+                            esperaProximaOperacao();
+                            break;
 
-                    case 3:
-                        System.out.println("Digite o valor a ser transferido");
-                        valor = scanner.nextInt();
-                        System.out.println("Digite o número da conta destino");
-                        numeroContaDestino = scanner.nextInt();
-                        listaContas.get(contaAcessada).transferir(valor, listaContas.get(numeroContaDestino));
-                        break;
+                        case 3:
+                            System.out.println("Digite o valor a ser transferido");
+                            valor = scanner.nextInt();
+                            System.out.println("Digite o número da conta destino");
+                            numeroContaDestino = scanner.nextInt();
+                            try{
+                                listaContas.get(contaAcessada).transferir(valor, listaContas.get(numeroContaDestino));
+                            } catch (Exception e){
+                                System.out.println("Conta destino inexistente!");
+                            }
+                            esperaProximaOperacao();
+                            break;
 
-                    case 4:
-                        System.out.println(contaAcessada);
-                        listaContas.get(contaAcessada).mostrarSaldo();
-                        break;
+                        case 4:
+                            listaContas.get(contaAcessada).mostrarSaldo();
+                            esperaProximaOperacao();
+                            break;
 
-                    case 5:
-                        continue;
+                        case 5:
+                            continue;
 
-                    case 6:
-                        System.out.println("Obrigado por usar Let's Bank! Até a próxima!");
-                        opcao = -1;
+                        case 6:
+                            System.out.println("Obrigado por usar Let's Bank! Até a próxima!");
+                            opcao = -1;
+                    }
+                    listou = false;
                 }
-                listou = false;
             }
         }
 
@@ -225,6 +253,16 @@ public class App {
             // toString
             System.out.println("Conta numero " + listaContas.get(i).getNumero()
                     + " pertencente a " + listaContas.get(i).getTitular().getNome());
+        }
+    }
+
+    public static void esperaProximaOperacao(){
+      
+        System.out.println("Pressione qualquer tecla para continuar...");
+        try {
+            System.in.read();
+        } catch (IOException e) {            
+            e.printStackTrace();
         }
     }
 
