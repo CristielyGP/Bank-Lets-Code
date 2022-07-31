@@ -8,7 +8,7 @@ import clientes.ClientePessoaJuridica;
 public class ContaInvestimento extends ContaRentavel {
 
     private static BigDecimal rendimento = BigDecimal.valueOf(0);
-    private final BigDecimal rendimentoAdicionalPJ = BigDecimal.valueOf(0.002);
+    private final BigDecimal rendimentoAdicionalPJ = BigDecimal.valueOf(0.02);
     
     public ContaInvestimento(int numero, int agencia, Cliente titular) {
         super(numero, agencia, titular);
