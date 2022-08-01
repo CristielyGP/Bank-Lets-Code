@@ -4,7 +4,7 @@ import clientes.Cliente;
 
 public abstract class ContaRentavel extends Conta {
         
-    public ContaRentavel(int numero, int agencia, Cliente titular) {
+    public ContaRentavel(int numero, int agencia, Cliente titular) throws Exception {
         super(numero, agencia, titular);
     }
 

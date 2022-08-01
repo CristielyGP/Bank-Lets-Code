@@ -1,6 +1,8 @@
 package contas;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+
 
 import clientes.Cliente;
 import clientes.ClientePessoaJuridica;
@@ -8,16 +10,25 @@ import clientes.ClientePessoaJuridica;
 public abstract class Conta {
 
     public static int numeroDeContas = 1;
+    private static HashSet<Integer[]> controladorDeContas = new HashSet<>();
     private int numero;
     private int agencia;
     private Cliente titular;
     private BigDecimal saldo;
 
-    public Conta(int numero, int agencia, Cliente titular) {
+    public Conta(int numero, int agencia, Cliente titular) throws Exception {
+        if (titular == null) {
+            throw new NullPointerException("Cliente inválido.");
+        }
+        Integer[] novoCodigoConta = {agencia, numero};
+        if (controladorDeContas.contains(novoCodigoConta)) {
+            throw new Exception("Conta já existente.");
+        }
         this.numero = numero;
         this.agencia = agencia;
         this.titular = titular;
         this.saldo = BigDecimal.valueOf(0);
+        controladorDeContas.add(novoCodigoConta);
         numeroDeContas++;
     }
     

@@ -8,7 +8,7 @@ public class ContaPoupanca extends ContaRentavel  {
 
     private static BigDecimal rendimento = BigDecimal.valueOf(0);
 
-    public ContaPoupanca(int numero, int agencia, ClientePessoaFisica titular) {
+    public ContaPoupanca(int numero, int agencia, ClientePessoaFisica titular) throws Exception {
         super(numero, agencia, titular);
     }
 

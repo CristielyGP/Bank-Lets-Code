@@ -10,10 +10,9 @@ public class ContaInvestimento extends ContaRentavel {
     private static BigDecimal rendimento = BigDecimal.valueOf(0);
     private final BigDecimal rendimentoAdicionalPJ = BigDecimal.valueOf(0.02);
     
-    public ContaInvestimento(int numero, int agencia, Cliente titular) {
+    public ContaInvestimento(int numero, int agencia, Cliente titular) throws Exception {
         super(numero, agencia, titular);
     }
-
     
     public static BigDecimal getRendimento() {
         return rendimento;
